@@ -1,9 +1,13 @@
 import './css/styles.css';
-// import debounce from 'lodash.debounce';
-// import {fetchCountries} from './js/fetchCountries'
+
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
 import {Notify} from 'notiflix';
 
 import axios, {isCancel, AxiosError} from 'axios';
+
+
 
 const URL = 'https://pixabay.com/api/'
 const KEY = '34475596-b269349df24b9ffe76cf99f2a'
@@ -12,23 +16,17 @@ let items = [];
 let page = 1;
 let query = '';
 let per_page = 40;
-let pages = 0
+let totalHits = 0;
 
-// const PARAM = '&image_type=photo&orientation=horizontal&safesearch=true&'
 const param = new URLSearchParams({ hits:'webformatURL,largeImageURL,tags,likes,views,comments,downloads'
 });
 const refs = {
     galleryList: document.querySelector('.gallery'),
-    // buttonsearchPhoto: document.querySelector('button'),
     inputEl: document.querySelector('input'),
     form: document.querySelector('form'),
-    loadMore: document.querySelector('.load-more')
+    loadMore: document.querySelector('.load-more'),
+    galleryContainer: document.querySelector('.gallery')
 }
-
-// axios
-// .get(`${URL}?key=${KEY}q=yellow+flowers&${PARAM}`)
-// .then(response => {console.log(response.data)})
-// .catch(error => {console.log(error)})
 
 
 
@@ -49,6 +47,9 @@ async function getPhoto() {
       if(data.total === 0){
         Notify.warning('Sorry, there are no images matching your search query. Please try again.');
       }
+      else{
+         Notify.success(`Hooray! We found ${data.totalHits} images`);}
+
     } catch (error) {
         if (error.response) {
           console.log(error.response.data);
@@ -63,24 +64,25 @@ async function getPhoto() {
 
 
   createImgGalerry = (item) => `
-  <a href="${item.largeImageURL} class="Large-img"">
-  <div class="photo-card">
-  <img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" width="280" height="260"/>
-  <div class="info">
-    <p class="info-item">
-      <b>Likes: ${item.likes}</b>
-    </p>
-    <p class="info-item">
-      <b>Views: ${item.views}</b>
-    </p>
-    <p class="info-item">
-      <b>Comments: ${item.comments}</b>
-    </p>
-    <p class="info-item">
-      <b>Downloads: ${item.downloads}</b>
-    </p>
-  </div>
-</div></a>`
+ <a href="${item.largeImageURL}" class="large-img link">
+<div class="photo-card">
+<img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" width="280" height="260"/>
+<div class="info">
+  <p class="info-item">
+    <b>Likes: ${item.likes}</b>
+  </p>
+  <p class="info-item">
+    <b>Views: ${item.views}</b>
+  </p>
+  <p class="info-item">
+    <b>Comments: ${item.comments}</b>
+  </p>
+  <p class="info-item">
+    <b>Downloads: ${item.downloads}</b>
+  </p>
+</div>
+</div>
+</a>`
 
 
 const generateContent = (array) => array?.reduce((acc,item) => acc + createImgGalerry(item), "");
@@ -105,13 +107,63 @@ function onSearchPhoto(e) {
     e.preventDefault()  
 
     const searchEl = refs.inputEl.value.trim().toLowerCase();
-    query = searchEl  
+
+    if(query === searchEl  ){
+      return;
+    }
+    query = searchEl;
+    page = 1;
+
     getPhoto() 
     refresh()
 }
 
-
-
-
+// const handleLoadMore = e => {
+//   page++
+//   getPhoto() 
+// }
 
 //   refs.loadMore.addEventListener('click' , handleLoadMore)
+
+
+
+function checkPosition() {
+  const height = document.body.offsetHeight
+  const screenHeight = window.innerHeight
+  const scrolled = window.scrollY
+  const threshold = height - screenHeight / 4
+  const position = scrolled + screenHeight
+
+  if (position >= threshold) {
+    page++
+    getPhoto()
+    
+  }
+}
+
+  window.addEventListener('scroll', checkPosition)
+  window.addEventListener('resize', checkPosition)
+
+
+
+
+
+
+
+
+
+  refs.galleryContainer.addEventListener('click' , onClickImg)
+
+  new SimpleLightbox('.gallery a', {
+    captionDelay: 250,
+ });
+
+  function onClickImg(e) {
+    e.preventDefault();
+
+    if( e.target.nodeName !== 'IMG'){
+      return
+      }
+
+
+  }
