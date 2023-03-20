@@ -63,7 +63,7 @@ async function getPhoto() {
   }
 
 
-  createImgGalerry = (item) => `
+const createImgGalerry = (item) => `
  <a href="${item.largeImageURL}" class="large-img link">
 <div class="photo-card">
 <img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" width="280" height="260"/>
