@@ -152,18 +152,18 @@ function checkPosition() {
 
 
 
-  refs.galleryContainer.addEventListener('click' , onClickImg)
+//   refs.galleryContainer.addEventListener('click' , onClickImg)
 
-  new SimpleLightbox('.gallery a', {
-    captionDelay: 250,
- });
+//   new SimpleLightbox('.gallery a', {
+//     captionDelay: 250,
+//  });
 
-  function onClickImg(e) {
-    e.preventDefault();
+//   function onClickImg(e) {
+//     e.preventDefault();
 
-    if( e.target.nodeName !== 'IMG'){
-      return
-      }
+//     if( e.target.nodeName !== 'IMG'){
+//       return
+//       }
 
 
-  }
+//   }
