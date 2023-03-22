@@ -40,3 +40,19 @@ form{
   margin-bottom: 30px;
   
   }
+
+  .is-hidden{
+    display: none;
+  }
+.info{
+  display: flex;
+}
+  .info-item{
+    font-size: 8px;
+    color: black;
+
+  }
+
+  .info-item:not(:last-child){
+    margin-right: 7px;
+  }
