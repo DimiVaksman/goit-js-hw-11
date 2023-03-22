@@ -59,7 +59,7 @@ galleryLightbox.refresh()
       //   refs.loadMore.classList.remove('is-hidden');
       // }
 
-      if(onSearchPhoto){
+      if(data.total > 0){
          Notify.success(`Hooray! We found ${data.totalHits} images`);}
 
     } catch (error) {
